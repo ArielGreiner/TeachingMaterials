@@ -1,0 +1,39 @@
+---
+title: "Introduction to R + Mapping"
+output: html_notebook
+---
+
+Hello! 
+
+<introduction>
+
+RStudio Download Link: https://posit.co/download/rstudio-desktop/ 
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+Data Source
+Moorea Coral Reef LTER and P. Edmunds. 2024. MCR LTER: Coral Reef: Long-term Population and Community Dynamics: Corals, ongoing since 2005 ver 40. Environmental Data Initiative. https://doi.org/10.6073/pasta/15d5120fb4f7b79811b16287eae15a35 (Accessed 2024-01-24).
+
+ADD PLOT OF THE 6 SITES
+----------
+https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-mcr.4.40
+
+Questions:
+how does hard coral cover change over time? (i think all of the genera listed are hard coral and the others are non-coral, but double check? what's CTB)
+check if >30% or not over time for each site
+<look into moorea dataset, reason to expect spatial differences? different sides of the island, types of reefs, type thing)>
+
+NOTES
+geographic coordinates verification: https://portal.edirepository.org/nis/metadataviewer?packageid=knb-lter-mcr.4.40
+data cleaning before sending it to them
+- need to make a 'Site' column by doing some reg ex to extract the site; then add geographic coordinates by matching the site name with the geo coordinates
+data cleaning to show them 
+- take the average for a site for each of the other columns? maybe
