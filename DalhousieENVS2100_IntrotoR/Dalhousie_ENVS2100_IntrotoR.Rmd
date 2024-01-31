@@ -26,15 +26,40 @@ Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by press
 
 <MORE INTRODUCTION STUFF??>
 
+INTRO TO CODING
+```{r, results="hide"}
+print("hello world")
+
+for(i in 1:10){
+	print(i)
+	if(i == 5){
+		print("Halfway!")
+	}
+}
+
+#hi I am a comment
+
+#Data Types
+months <- c("January", "February", "March")
+numbers <- c(1,2,3,4)
+
+#NOT DONE
+```
+
 LOAD IN THE DATA
 ```{r}
 setwd("~/Dropbox/Github/TeachingMaterials/DalhousieENVS2100_IntrotoR/")
 
-data <- load(file = "avgdata_ENVS2100_IntrotoR.RData")
+load(file = "avgdata_ENVS2100_IntrotoR.RData") #avgdata
 ```
 
-INTRO TO CODING
-#, <-, {} type stuff
+LOADING PACKAGES
+need to install ggplot2
+```{r, results="hide"}
+
+#install.packages("ggplot2")
+
+```
 
 INFORMATION ABOUT THE DATA
 Data Source
@@ -52,12 +77,16 @@ Functional groups (i.e., dependent variables) counted are:
 - Sand
 - Unknown
 
-<MAYBE HAVE THIS HERE???>
-Commands that are helpful for getting a quick sense of the data
-name()
-head()
-```{r}
+EXPLORE THE DATA
+Some basic commands that are helpful for getting a quick sense of the data
+```{r, results="hide"}
+names(avgdata)
 
+head(avgdata)
+
+tail(avgdata)
+
+str(avgdata)
 ```
 
 BASIC DATA CLEANING
@@ -65,14 +94,34 @@ BASIC DATA CLEANING
 
 MAKE SOME SIMPLE PLOTS OF THE DATA
 base plots vs ggplot plots
-```{r}
+
+Base R plotting guide: http://www.sthda.com/english/wiki/r-base-graphs
+```{r, results="hide"}
+
+#BASE R PLOTS
+
+##Basic Scatter plot - Shows how hard coral cover changes over time in LTER 1
+#try changing the site by changing "LTER 1" to "LTER 2" or changing the benthic type by changing "HardCoral_StressTol" to "Sand"
+plot(x = avgdata$Date[avgdata$Site == "LTER 1"], y = avgdata$HardCoral_StressTol[avgdata$Site == "LTER 1"], pch = 20, xlab = "Year", ylab = "Hard Coral Cover (Stress Tol)")
+
+#add some others
+
+#ggplot2 PLOTS
+library(ggplot2)
+
+
 
 ```
 
 
 SPATIAL VISUALIZATION OF THE DATA 
 <ADD PLOT OF THE 6 SITES>
-```{r}
+```{r, results="hide"}
+library(maps)
+library(ggplot2)
+
+#NOT DONE YET
+
 
 ```
 
@@ -82,22 +131,6 @@ QUESTIONS WE MAY WANT TO ANSWER WITH THIS DATA
 - 30% or over?
 - Spatial Variation?
 ```{r}
-library(maps)
-library(ggplot2)
-
-worldmap <- map_data ("world", wrap = c(0, 360))
-hawaii_reefdata <- reefdata[reefdata$old_Longitude > 180 & reefdata$old_Longitude < 210 & reefdata$Latitude > 10 & reefdata$Latitude < 40,]
-Hawaii_networks <-  
-  ggplot(aes(x = long, y = lat), data = worldmap) + 
-  geom_polygon(aes(group = group), fill="gainsboro", colour = "gainsboro") +
-  xlab("Longitude") + ylab("Latitude")+ 
-  geom_point(data = hawaii_reefdata, aes(x = old_Longitude, y = Latitude, colour = cl.c), show.legend = F)+ #, colour = cl.c
-  coord_cartesian(xlim = c(180,210), ylim = c(10,40)) +
-  scale_y_continuous(limits = c(10,40)) + 
-  scale_x_continuous(limits = c(180, 180 + 30), #c(180 - 3, 180 + 2.5) #c(180 - 3, 180)
-                     breaks = seq(180, 210, 5)) +
-  coord_equal() +  theme_bw()
-ggsave(Hawaii_networks, filename = paste0("GeneratingFigures_Code/Extra Figures/Figure1a_Hawaiionly.png"), bg = "transparent", height = 10, width = 10)
 
 ```
 
