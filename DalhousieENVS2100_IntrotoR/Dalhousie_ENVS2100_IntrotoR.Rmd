@@ -1,11 +1,15 @@
 ---
 title: "Introduction to R + Mapping"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
 ---
 
 Hello! 
 
-<introduction>
+<INTRODUCTION>
 
 RStudio Download Link: https://posit.co/download/rstudio-desktop/ 
 
@@ -14,26 +18,218 @@ This is an [R Markdown] (http://rmarkdown.rstudio.com) Notebook. When you execut
 Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
 
 ```{r}
+print("Hello World")
 plot(cars)
 ```
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
 
+<MORE INTRODUCTION STUFF??>
+
+LOAD IN THE DATA
+```{r}
+setwd("~/Dropbox/Github/TeachingMaterials/DalhousieENVS2100_IntrotoR/")
+
+data <- load(file = "avgdata_ENVS2100_IntrotoR.RData")
+```
+
+INTRO TO CODING
+#, <-, {} type stuff
+
+INFORMATION ABOUT THE DATA
 Data Source
 Moorea Coral Reef LTER and P. Edmunds. 2024. MCR LTER: Coral Reef: Long-term Population and Community Dynamics: Corals, ongoing since 2005 ver 40. Environmental Data Initiative. https://doi.org/10.6073/pasta/15d5120fb4f7b79811b16287eae15a35 (Accessed 2024-01-24).
 
-ADD PLOT OF THE 6 SITES
+Annual survey every April since 2005, sampled photographically
+Habitat Types: Fringing Reef, Lagoon (Backreef), and Outer Reef (Forereef; differs by depth)
+
+Functional groups (i.e., dependent variables) counted are: 
+- Hard Coral (Stress Tolerant and Others)
+- HydroCoral (fire coral) = Millepora
+- Macroalgae
+- Small Algae or Bare
+- Soft Corals
+- Sand
+- Unknown
+
+<MAYBE HAVE THIS HERE???>
+Commands that are helpful for getting a quick sense of the data
+name()
+head()
+```{r}
+
+```
+
+BASIC DATA CLEANING
+<meld the two Hard Coral columns into one Hard Coral column>
+
+MAKE SOME SIMPLE PLOTS OF THE DATA
+base plots vs ggplot plots
+```{r}
+
+```
+
+
+SPATIAL VISUALIZATION OF THE DATA 
+<ADD PLOT OF THE 6 SITES>
+```{r}
+
+```
+
+
+QUESTIONS WE MAY WANT TO ANSWER WITH THIS DATA
+- How does hard coral cover change over time? 
+- 30% or over?
+- Spatial Variation?
+```{r}
+library(maps)
+library(ggplot2)
+
+worldmap <- map_data ("world", wrap = c(0, 360))
+hawaii_reefdata <- reefdata[reefdata$old_Longitude > 180 & reefdata$old_Longitude < 210 & reefdata$Latitude > 10 & reefdata$Latitude < 40,]
+Hawaii_networks <-  
+  ggplot(aes(x = long, y = lat), data = worldmap) + 
+  geom_polygon(aes(group = group), fill="gainsboro", colour = "gainsboro") +
+  xlab("Longitude") + ylab("Latitude")+ 
+  geom_point(data = hawaii_reefdata, aes(x = old_Longitude, y = Latitude, colour = cl.c), show.legend = F)+ #, colour = cl.c
+  coord_cartesian(xlim = c(180,210), ylim = c(10,40)) +
+  scale_y_continuous(limits = c(10,40)) + 
+  scale_x_continuous(limits = c(180, 180 + 30), #c(180 - 3, 180 + 2.5) #c(180 - 3, 180)
+                     breaks = seq(180, 210, 5)) +
+  coord_equal() +  theme_bw()
+ggsave(Hawaii_networks, filename = paste0("GeneratingFigures_Code/Extra Figures/Figure1a_Hawaiionly.png"), bg = "transparent", height = 10, width = 10)
+
+```
+
+
+
+HELPFUL NOTES
+Commands that are helpful for getting a quick sense of the data
+name()
+head()
+if want to test if your code does what you want it do before you actually re-assign something, just run everything but the assignment
+or just assign it to 'dummy' if it's a large object or if ^ is not possible to do
 ----------
-https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-mcr.4.40
 
 Questions:
 how does hard coral cover change over time? (i think all of the genera listed are hard coral and the others are non-coral, but double check? what's CTB)
 check if >30% or not over time for each site
 <look into moorea dataset, reason to expect spatial differences? different sides of the island, types of reefs, type thing)>
 
+
+
+DATA CLEANING
+The code below here shows how I took the data that I downloaded directly from the LTER website and edited it to be more manageable for this lesson.
+
+The initial data 'knb-lter-mcr.4_2_20240105.csv' was downloaded from 
+https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-mcr.4.40, by clicking on the "2. Percent Cover - Wide Table" download.
+
+```{r,warning=FALSE, results="hide"}
+setwd("~/Dropbox/Github/TeachingMaterials/DalhousieENVS2100_IntrotoR/")
+
+#Load in the .csv file (made reference to: https://teacherscollege.screenstepslive.com/a/1122473-import-data-in-r-csv-files-into-r-studio)
+initialdata <- read.csv("knb-lter-mcr.4_2_20240105.csv") #Full path: "~/Dropbox/Github/TeachingMaterials/DalhousieENVS2100_IntrotoR/knb-lter-mcr.4_2_20240105.csv"
+
+names(initialdata) #look at the original column names
+
+#R does not recognize 'na' as NA's, need to change them to a format R recognizes
+dummy <- initialdata #just in case
+initialdata[initialdata == "na"] <- NA #threw some error messages but it worked
+
+#most of the columns are characters (same for dummy), it's going to be much easier to work with the columns with numbers in them if they are numeric
+str(initialdata) 
+for(i in 3:34){ #there are more efficient ways to do this but since I only have to do this once, doing it the inefficient way
+  initialdata[,i] <- as.numeric(initialdata[,i])
+}
+
+#want to check if all of the rows sum to the same thing, to check my understanding of what this dataset is 
+#can do that using rowSums (https://www.statology.org/rowsums-function-in-r/) and range() to check what the range of values are
+range(rowSums(initialdata[,3:34], na.rm=T)) #0.0 1119.4, but most of them seem to be around 1090.9; so it seems like these are vaguely percent cover values
+
+##going to make a handful of new columns and just put them at the end of the set of columns, for simplicity. Will move them around later.
+#make a site column that just has 'LTER X' in it
+#this will involve using reg ex expressions (used for cutting/splicing strings), which I never remember so I always look up how to do this
+#https://stackoverflow.com/questions/56612262/remove-string-after-first-number-using-r-regex this answer came from here
+initialdata$Site <- sub("^(\\D*\\d+).*", "\\1", initialdata$Location)
+
+##add geographic coordinates to all of the sites
+#levels(as.factor(initialdata$Site)) #this is a trick that I use when I know that a column contains only a handful of different strings and I want to know what they all are quickly. It is also handy as a troubleshooting method.
+#can use it to extract the site codes easily
+sites <- levels(as.factor(initialdata$Site)) #"LTER 1" "LTER 2" "LTER 3" "LTER 4" "LTER 5" "LTER 6"
+#geographic coordinates given as north, south, east, west -> but i just want the centroid, so take the average of the N/S one (latitude) and E/W one (longitude)
+initialdata$Site_Latitude <- NA
+initialdata$Site_Longitude <- NA
+
+lat_sites <- c(((-17.47185366-17.48641792)/2), 
+               ((-17.46576169-17.48131958)/2), 
+               ((-17.50382025-17.52087158)/2), 
+               ((-17.53305021-17.55064263)/2),
+               ((-17.56818162-17.59182383)/2),
+               ((-17.50735955-17.52839766)/2))
+long_sites <- c(((-149.8455917-149.829821)/2),
+                ((-149.8116849-149.7961685)/2),
+                ((-149.7708619-149.7519968)/2),
+                ((-149.7772857-149.7566866)/2),
+                ((-149.8869755-149.8561009)/2),
+                ((-149.934537-149.9115336)/2))
+
+for(i in 1:length(sites)){
+  initialdata$Site_Latitude[initialdata$Site == sites[i]] <- lat_sites[i]
+  initialdata$Site_Longitude[initialdata$Site == sites[i]] <- long_sites[i]
+}
+
+##convert the numbers in columns 3-34 to percentages of a total
+#need a sum column first, see above for the code for that 
+initialdata$totalcover <- rowSums(initialdata[,3:34], na.rm=T)
+
+#making a new dataframe to make this a bit easier and to ensure that things are organized a bit more sensibly
+#note: redefining CTB and Non_Coralline_Crustose_Algae as 'SmallAlgae_orBare', this isn't a perfect categorization but should suffice here 
+#to do this, need to make a vector of these two being added together that treats the NA's properly
+SmallAlgaeorBare <- rowSums(initialdata[,4:5], na.rm=T)
+#dividing all of the columns with data by the total to turn them into proportions of the total
+nonavg_data <- data.frame(Date = initialdata$Date, Site = initialdata$Site, Latitude = initialdata$Site_Latitude, Longitude = initialdata$Site_Longitude, HardCoral_Other = NA, HardCoral_StressTol = NA, Macroalgae = initialdata$Macroalgae/initialdata$totalcover, SoftCoral = initialdata$Soft_Coral/initialdata$totalcover, HydroCoral = initialdata$Millepora/initialdata$totalcover, SmallAlgae_orBare = (SmallAlgaeorBare)/initialdata$totalcover, Sand = initialdata$Sand/initialdata$totalcover, Unknown_or_Other = initialdata$Unknown_or_Other/initialdata$totalcover) 
+#convert the hard coral data into 'stress tolerant hard coral' and 'other hard coral'
+#referred to this paper to organize the genera: https://onlinelibrary.wiley.com/doi/full/10.1111/j.1461-0248.2012.01861.x 
+nonavg_data$HardCoral_Other <- rowSums(initialdata[,c(9,10,15,16,17,18,22,25,26,27,28,30,31,32,33)], na.rm = T)
+nonavg_data$HardCoral_StressTol <- rowSums(initialdata[,c(8,11,12,13,14,19,21,23,24,29)], na.rm = T)
+#turning these into proportions also
+nonavg_data$HardCoral_Other <- nonavg_data$HardCoral_Other/initialdata$totalcover
+nonavg_data$HardCoral_StressTol <- nonavg_data$HardCoral_StressTol/initialdata$totalcover
+
+#checking: range(rowSums(nonavg_data[,5:12], na.rm=T)) #range = 0-1, checked that they're all either 0 or 1 which is fair
+checking <- rowSums(nonavg_data[,5:12], na.rm=T)
+#some 0s in checking[9936:10936], these are from situations where the cover value is listed as 0
+
+#take the average of all of the quadrats for each site for each year
+years <- seq(2005,2022,1)
+avgdata <- data.frame(Date = rep(years, each = length(sites)), Site = rep(sites,length(years)), Latitude = lat_sites, Longitude = long_sites, HardCoral_Other = NA, HardCoral_StressTol = NA, HydroCoral = NA, Macroalgae = NA, SoftCoral = NA, SmallAlgae_orBare = NA, Sand = NA, Unknown_or_Other = NA) 
+
+for(i in 1:length(years)){
+  for(j in 1:length(sites)){
+    avgdata$HardCoral_Other[avgdata$Date == years[i] & avgdata$Site == sites[j]] <- mean(nonavg_data$HardCoral_Other[nonavg_data$Date == years[i] & nonavg_data$Site == sites[j]], na.rm = T)
+    avgdata$HardCoral_StressTol[avgdata$Date == years[i] & avgdata$Site == sites[j]] <- mean(nonavg_data$HardCoral_StressTol[nonavg_data$Date == years[i] & nonavg_data$Site == sites[j]], na.rm = T)
+     avgdata$HydroCoral[avgdata$Date == years[i] & avgdata$Site == sites[j]] <- mean(nonavg_data$HydroCoral[nonavg_data$Date == years[i] & nonavg_data$Site == sites[j]], na.rm = T)
+    avgdata$Macroalgae[avgdata$Date == years[i] & avgdata$Site == sites[j]] <- mean(nonavg_data$Macroalgae[nonavg_data$Date == years[i] & nonavg_data$Site == sites[j]], na.rm = T)
+    avgdata$SoftCoral[avgdata$Date == years[i] & avgdata$Site == sites[j]] <- mean(nonavg_data$SoftCoral[nonavg_data$Date == years[i] & nonavg_data$Site == sites[j]], na.rm = T)
+    avgdata$SmallAlgae_orBare[avgdata$Date == years[i] & avgdata$Site == sites[j]] <- mean(nonavg_data$SmallAlgae_orBare[nonavg_data$Date == years[i] & nonavg_data$Site == sites[j]], na.rm = T)
+    avgdata$Sand[avgdata$Date == years[i] & avgdata$Site == sites[j]] <- mean(nonavg_data$Sand[nonavg_data$Date == years[i] & nonavg_data$Site == sites[j]], na.rm = T)
+    avgdata$Unknown_or_Other[avgdata$Date == years[i] & avgdata$Site == sites[j]] <- mean(nonavg_data$Unknown_or_Other[nonavg_data$Date == years[i] & nonavg_data$Site == sites[j]], na.rm = T)
+  }
+}
+
+#just for simplicity, im going to recode the NaN's in this dataset as 0s because I do not know what they are but they will make things harder for the students if I leave them in
+#used this https://www.statology.org/nan-in-r/ to figure out how to do this
+avgdata$SoftCoral[which(is.na(avgdata$SoftCoral))] <- 0
+avgdata$Unknown_or_Other[which(is.na(avgdata$Unknown_or_Other))] <- 0
+
+#now save this final dataset
+save(avgdata, file = "avgdata_ENVS2100_IntrotoR.RData")
+#https://datatofish.com/export-dataframe-to-csv-in-r/ 
+write.csv(avgdata, file = "avgdata_ENVS2100_IntrotoR.csv")
+
+```
+
 NOTES
 geographic coordinates verification: https://portal.edirepository.org/nis/metadataviewer?packageid=knb-lter-mcr.4.40
-data cleaning before sending it to them
-- need to make a 'Site' column by doing some reg ex to extract the site; then add geographic coordinates by matching the site name with the geo coordinates
-data cleaning to show them 
-- take the average for a site for each of the other columns? maybe
+
+
