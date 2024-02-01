@@ -7,28 +7,16 @@ output:
   pdf_document: default
 ---
 
-Hello! 
+ENVS2100: Introduction to R Lesson
 
-<INTRODUCTION>
+The relevant code for this lesson is contained in the grey boxes below. 
 
-RStudio Download Link: https://posit.co/download/rstudio-desktop/ 
+During the lesson we will go through the code in order. The content at the very bottom of the document under '<<<EXTRA MATERIALS>>>' will not be covered during the lesson but is provided in case students are interested in any extra material.
 
-This is an [R Markdown] (http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+CODING 101
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
-
-```{r}
-print("Hello World")
-plot(cars)
-```
-
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
-
-<MORE INTRODUCTION STUFF??>
-
-INTRO TO CODING
 ```{r, results="hide"}
-print("hello world")
+print("Hello World")
 
 for(i in 1:10){
 	print(i)
@@ -37,27 +25,110 @@ for(i in 1:10){
 	}
 }
 
-#hi I am a comment
+#this is a comment
 
-#Data Types
-months <- c("January", "February", "March")
-numbers <- c(1,2,3,4)
 
-#NOT DONE
-```
+numbers <- c(1,2,3)
 
-LOAD IN THE DATA
-```{r}
-setwd("~/Dropbox/Github/TeachingMaterials/DalhousieENVS2100_IntrotoR/")
+1 == 1
+1 != 2
+1 < 2
+3 > 1
+1 <= 1
+1 >= 0
 
-load(file = "avgdata_ENVS2100_IntrotoR.RData") #avgdata
+greetings <- c("hello","goodbye","nice to meet you")
+
+cats <- data.frame(cat_ID = c(1,2,3), cat_colour = c("brown","red","white"))
+cats[1,] #first row
+cats[,1] #first column
+cats$cat_ID
+cats$cat_colour[cats$cat_ID == 1]
+
+mean(c(1,2,3,4))
+
 ```
 
 LOADING PACKAGES
-need to install ggplot2
+need to install ggplot2 + dependencies
 ```{r, results="hide"}
 
+#need to choose a CRAN mirror to download from, I usually choose Ontario (in Canada)
+
 #install.packages("ggplot2")
+#make sure to install dependencies also!
+
+library(ggplot2)
+
+```
+
+FINDING HELP
+```{r, warning=FALSE, results="hide"}
+
+?plot
+??mutate #have not loaded in dplyr, so if searched this with just one '?' it would not work; this shows you all of the results from all of the packages with a function with this name
+
+##ADD AN EXAMPLE ERROR MESSAGE AND HELP SITE THAT CAME UP
+
+##Example Query: "How do I remove everything after the first number in a string?"
+stringz <- c("LTER 1 Fringing Reef Coral Transect Pole 1-2 Quadrat 1", "LTER 2 Fringing Reef Coral Transect Pole 1-2 Quadrat 2","LTER 1 Fringing Reef Coral Transect Pole 1-2 Quadrat 3","LTER 3 Fringing Reef Coral Transect Pole 1-2 Quadrat 4", "LTER 1 Fringing Reef Coral Transect Pole 1-2 Quadrat 5","LTER 4 Fringing Reef Coral Transect Pole 1-2 Quadrat 6")
+#this will involve using reg ex expressions (used for cutting/splicing strings), which I never remember so I always look up how to do this
+#https://stackoverflow.com/questions/56612262/remove-string-after-first-number-using-r-regex the answer below came from here
+small_stringz <- sub("^(\\D*\\d+).*", "\\1", stringz)
+#"LTER 1" "LTER 2" "LTER 1" "LTER 3" "LTER 1" "LTER 4"
+
+##What does 'rowSums' do?
+rowSums #output below
+#function (x, na.rm = FALSE, dims = 1L) 
+#{
+#    if (is.data.frame(x)) 
+#        x <- as.matrix(x)
+#    if (!is.array(x) || length(dn <- dim(x)) < 2L) 
+#        stop("'x' must be an array of at least two dimensions")
+#    if (dims < 1L || dims > length(dn) - 1L) 
+#        stop("invalid 'dims'")
+#    p <- prod(dn[-(id <- seq_len(dims))])
+#    dn <- dn[id]
+#    z <- if (is.complex(x)) 
+#        .Internal(rowSums(Re(x), prod(dn), p, na.rm)) + (0+1i) * 
+#            .Internal(rowSums(Im(x), prod(dn), p, na.rm))
+#    else .Internal(rowSums(x, prod(dn), p, na.rm))
+#    if (length(dn) > 1L) {
+#        dim(z) <- dn
+#        dimnames(z) <- dimnames(x)[id]
+#    }
+#    else names(z) <- dimnames(x)[[1L]]
+#    z
+#}
+#<bytecode: 0x134666780>
+#<environment: namespace:base>
+
+#Can look at a large sample dataset that comes pre-loaded into R ('iris')
+head(iris) #shows the first 6 rows of a dataframe
+str(iris) #shows the general structure of the object and the data types included in each part of the object
+
+```
+
+LOAD IN THE DATA
+Commands to load in + explore the dataset
+```{r, results="hide"}
+#The manual methods below are for Base R, if you are using RStudio let me know and I will show you how to do it 
+#Manual Method (Windows): File -> Load Workspace -> go to where you downloaded the file -> Open the File
+#Manual Method (Mac): Workspace -> Load Workspace File... -> go to where you downloaded the file -> Open the File
+
+#General Method: Go to the file on your computer, right click on it to find the path, copy paste it in quotes into load(file = "")
+#for windows: <NEED TO CHECK THIS, SOME WEIRD // SITUATION>
+#for mac: should be able to just copy paste it straight in
+#e.g. on my computer  
+load(file = "~/Dropbox/Github/TeachingMaterials/DalhousieENVS2100_IntrotoR/avgdata_ENVS2100_IntrotoR.RData") 
+
+#it will load in as 'avgdata'
+
+#check that the file looks okay!
+head(avgdata) 
+str(avgdata)
+names(avgdata) #column names
+avgdata[,c(1,2)] #look at the first two columns
 
 ```
 
@@ -65,49 +136,78 @@ INFORMATION ABOUT THE DATA
 Data Source
 Moorea Coral Reef LTER and P. Edmunds. 2024. MCR LTER: Coral Reef: Long-term Population and Community Dynamics: Corals, ongoing since 2005 ver 40. Environmental Data Initiative. https://doi.org/10.6073/pasta/15d5120fb4f7b79811b16287eae15a35 (Accessed 2024-01-24).
 
-Annual survey every April since 2005, sampled photographically
-Habitat Types: Fringing Reef, Lagoon (Backreef), and Outer Reef (Forereef; differs by depth)
-
-Functional groups (i.e., dependent variables) counted are: 
-- Hard Coral (Stress Tolerant and Others)
-- HydroCoral (fire coral) = Millepora
-- Macroalgae
-- Small Algae or Bare
-- Soft Corals
-- Sand
-- Unknown
-
-EXPLORE THE DATA
-Some basic commands that are helpful for getting a quick sense of the data
+BASIC DATA CLEANING
+Want to Meld the two Hard Coral columns into one Hard Coral column. To see more advanced data cleaning, look below in the <<<EXTRA MATERIALS>>> section.
 ```{r, results="hide"}
-names(avgdata)
+head(avgdata) #look at the dataset again, to recall the format
 
-head(avgdata)
+avgdata$HardCoral <- avgdata$HardCoral_Other + avgdata$HardCoral_StressTol #this adds a hard coral column to the end of the dataset
 
-tail(avgdata)
+head(avgdata) #see it here
 
-str(avgdata)
 ```
 
-BASIC DATA CLEANING
-<meld the two Hard Coral columns into one Hard Coral column>
 
-MAKE SOME SIMPLE PLOTS OF THE DATA
+SIMPLE PLOTS OF THE DATA
 base plots vs ggplot plots
 
 Base R plotting guide: http://www.sthda.com/english/wiki/r-base-graphs
+ggplot plotting guide: https://rstudio.github.io/cheatsheets/html/data-visualization.html, https://datacarpentry.org/R-ecology-lesson/04-visualization-ggplot2.html
 ```{r, results="hide"}
 
 #BASE R PLOTS
 
 ##Basic Scatter plot - Shows how hard coral cover changes over time in LTER 1
-#try changing the site by changing "LTER 1" to "LTER 2" or changing the benthic type by changing "HardCoral_StressTol" to "Sand"
-plot(x = avgdata$Date[avgdata$Site == "LTER 1"], y = avgdata$HardCoral_StressTol[avgdata$Site == "LTER 1"], pch = 20, xlab = "Year", ylab = "Hard Coral Cover (Stress Tol)")
+#try changing the site by changing "LTER 1" to another LTER or changing the benthic type by changing "HydroCoral" to "HardCoral_StressTol" or some other benthic type after the '$' sign in the response variable (y) 
+plot(x = avgdata$Date[avgdata$Site == "LTER 1"], y = avgdata$HydroCoral[avgdata$Site == "LTER 1"], pch = 20, xlab = "Year", ylab = "Hard Coral Cover (Stress Tol)", main = "LTER 1")
 
-#add some others
+#same plot as above, with a line marking 30% cover
+plot(x = avgdata$Date[avgdata$Site == "LTER 1"], y = avgdata$HydroCoral[avgdata$Site == "LTER 1"], pch = 20, xlab = "Year", ylab = "Hard Coral Cover (Stress Tol)", main = "LTER 1", ylim=c(0,1))
+abline(h=0.3, col = "red") 
 
-#ggplot2 PLOTS
+#can also plot another benthic variable on the same plot using points()
+plot(x = avgdata$Date[avgdata$Site == "LTER 1"], y = avgdata$HydroCoral[avgdata$Site == "LTER 1"], pch = 20, xlab = "Year", ylab = "Hard Coral Cover (Stress Tol)", main = "LTER 1", ylim=c(0,1))
+points(x = avgdata$Date[avgdata$Site == "LTER 1"], y = avgdata$Macroalgae[avgdata$Site == "LTER 1"], pch = 20, col = "blue")
+abline(h=0.3, col = "red") 
+#NOTE TO ARIEL: ADD LEGEND HERE
+
+##Basic Scatter plot - Shows how hard coral cover varies across space in 2005
+#try changing the year by changing 2005 to another year or changing the benthic type by changing "HardCoral_StressTol" to "Sand" or some other benthic type after the '$' sign in the response variable (y) 
+#as.factor() changes that vector into a factor variable, enabling it to be plotted along the x-axis since factor variables are ordered character variables  
+plot(x = as.factor(avgdata$Site[avgdata$Date == 2005]), y = avgdata$HardCoral_StressTol[avgdata$Date == 2005], xlab = "Site", ylab = "Hard Coral Cover (Stress Tol)", main = "2005")
+#NOTE TO ARIEL: ADD MORE TYPES OF BASE PLOTS
+
+#GGPLOTS
+
+#you can make very similar plots using ggplot! 
 library(ggplot2)
+
+##Basic Scatter plot - Shows how hard coral cover changes over time in LTER 1
+#try changing the site by changing "LTER 1" to another LTER or changing the benthic type by changing "y = HydroCoral" to "y = HardCoral_StressTol" or some other benthic type 
+ggplot(aes(x = Date, y = HydroCoral), data = avgdata[avgdata$Site == "LTER 1",])+
+  ggtitle("LTER 1")+ #add '+' to indicate that you're adding another element to the plot
+  geom_point()
+
+#same plot as above, with a line marking 30% cover
+#couldn't remember how to do this, so looked up 'add horizontal line to ggplot' and found http://www.sthda.com/english/wiki/ggplot2-add-straight-lines-to-a-plot-horizontal-vertical-and-regression-lines 
+ggplot(aes(x = Date, y = HydroCoral), data = avgdata[avgdata$Site == "LTER 1",])+
+  ggtitle("LTER 1")+ #add '+' to indicate that you're adding another element to the plot
+  geom_point()+
+  geom_hline(yintercept = 0.3, col = "red")
+
+#can also plot another benthic variable on the same plot by adding another geom_point() line
+ggplot(aes(x = Date, y = HydroCoral), data = avgdata[avgdata$Site == "LTER 1",])+
+  ggtitle("LTER 1")+ #add '+' to indicate that you're adding another element to the plot
+  geom_point()+
+  geom_point(aes(x = Date, y = Macroalgae), col = "blue")+
+  geom_hline(yintercept = 0.3, col = "red")
+#NOTE TO ARIEL: ADD LEGEND HERE
+  
+##Basic Scatter plot - Shows how hard coral cover varies across space in 2005
+#try changing the year by changing 2005 to another year or changing the benthic type by changing "y = HydroCoral" to " y = HardCoral_StressTol" or some other benthic type 
+ggplot(aes(x = Site, y = HydroCoral), data = avgdata[avgdata$Date == 2005,])+
+  ggtitle("2005")+ #add '+' to indicate that you're adding another element to the plot
+  geom_point()
 
 
 
@@ -115,41 +215,26 @@ library(ggplot2)
 
 
 SPATIAL VISUALIZATION OF THE DATA 
-<ADD PLOT OF THE 6 SITES>
 ```{r, results="hide"}
-library(maps)
+library(maps) #CHECK IF THIS IS A DEPENDENCY IN GGPLOT2
 library(ggplot2)
 
-#NOT DONE YET
+#NOT WORKING YET
+#this plot is a bit more advanced, but you can still play around with it by changing which benthic type determines the colouration by changing 'colour' of geom_point below
+
+#correct the longitude
 
 
 ```
 
 
-QUESTIONS WE MAY WANT TO ANSWER WITH THIS DATA
-- How does hard coral cover change over time? 
+ANSWER SOME QUESTIONS WITH THIS DATA
+- How does hard coral cover change over time? Stress tolerant hard coral cover?
 - 30% or over?
 - Spatial Variation?
-```{r}
-
-```
 
 
-
-HELPFUL NOTES
-Commands that are helpful for getting a quick sense of the data
-name()
-head()
-if want to test if your code does what you want it do before you actually re-assign something, just run everything but the assignment
-or just assign it to 'dummy' if it's a large object or if ^ is not possible to do
-----------
-
-Questions:
-how does hard coral cover change over time? (i think all of the genera listed are hard coral and the others are non-coral, but double check? what's CTB)
-check if >30% or not over time for each site
-<look into moorea dataset, reason to expect spatial differences? different sides of the island, types of reefs, type thing)>
-
-
+<<<EXTRA MATERIALS>>>
 
 DATA CLEANING
 The code below here shows how I took the data that I downloaded directly from the LTER website and edited it to be more manageable for this lesson.
@@ -265,4 +350,5 @@ write.csv(avgdata, file = "avgdata_ENVS2100_IntrotoR.csv")
 NOTES
 geographic coordinates verification: https://portal.edirepository.org/nis/metadataviewer?packageid=knb-lter-mcr.4.40
 
+It's often easier to code in RStudio, you can download that here: https://posit.co/download/rstudio-desktop/ 
 
