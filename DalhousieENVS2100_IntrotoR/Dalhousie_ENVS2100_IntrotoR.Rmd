@@ -219,10 +219,18 @@ SPATIAL VISUALIZATION OF THE DATA
 library(maps) #CHECK IF THIS IS A DEPENDENCY IN GGPLOT2
 library(ggplot2)
 
-#NOT WORKING YET
 #this plot is a bit more advanced, but you can still play around with it by changing which benthic type determines the colouration by changing 'colour' of geom_point below
 
-#correct the longitude
+#correct the longitude because the map is from 0 -> 360 and the longitude is currently ~-149
+avgdata$Longitude_corrected <- avgdata$Longitude +360
+
+worldmap <- map_data ("world", wrap = c(0, 360))
+ggplot(aes(x = long, y = lat), data = worldmap) + 
+  geom_polygon(aes(group = group), fill="gainsboro", colour = "gainsboro") +
+  xlab("Longitude") + ylab("Latitude")+ 
+  geom_point(data = avgdata[avgdata$Date == 2005,], aes(x = Longitude_corrected, y = Latitude, colour = HydroCoral))+ #, colour = cl.c
+  coord_cartesian(xlim = c(209,212), ylim = c(-17,-18)) +
+  theme_bw()
 
 
 ```
