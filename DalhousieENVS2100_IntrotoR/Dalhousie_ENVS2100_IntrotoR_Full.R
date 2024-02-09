@@ -40,8 +40,7 @@ ggplot(aes(x = Sepal.Length, y = Sepal.Width, col = Species), data = iris)+ #add
 
 
 #now let's download some actual coral data!!
-# Download code from here: http://tinyurl.com/ENVS2100RData 
-
+# Download data from here: http://tinyurl.com/ENVS2100RData 
 
 ##Load in the data!
 #Manual Method
@@ -50,17 +49,105 @@ ggplot(aes(x = Sepal.Length, y = Sepal.Width, col = Species), data = iris)+ #add
 #for windows: <NEED TO CHECK THIS, SOME WEIRD // SITUATION>
 #for mac: right click on the file, click on inspect element, copy paste the file path into the code below
 #e.g. on my computer  
-load(file = "~/Dropbox/Github/TeachingMaterials/DalhousieENVS2100_IntrotoR/avgdata_ENVS2100_IntrotoR.RData") 
+load(file = "~/Dropbox/Github/TeachingMaterials/DalhousieENVS2100_IntrotoR/avgdata_ENVS2100_IntrotoR.RData") #it's called 'avgdata'
 
+#Look at the Data
+View(avgdata) 
+head(avgdata)
+summary(avgdata) 
+str(avgdata)
 
-#look at the data
+#simple data manipulation
+avgdata$HardCoral <- avgdata$HardCoral_Other + avgdata$HardCoral_StressTol
 
 #show them how to code a simple plot of the data
+plot(x = avgdata$Date[avgdata$Site == "LTER 1"], y = avgdata$HydroCoral[avgdata$Site == "LTER 1"], pch = 20, xlab = "Year", ylab = "Hard Coral Cover (Stress Tol)", main = "LTER 1")
+
+#in ggplot
+ggplot(aes(x = Date, y = HydroCoral), data = avgdata[avgdata$Site == "LTER 1",])+
+  ggtitle("LTER 1")+ #add '+' to indicate that you're adding another element to the plot
+  geom_point()
+
+#now make some plots of your own to determine if the reefs in Moorea are healthy 
+#Is hard coral cover increasing or decreasing over time?
+##Does location matter?
+##What about stress tolerant hard coral, specifically?
+
+#Recall: Healthy coral reef = 30% hard coral cover
+##How many reefs are above this threshold?
+##Is this changing over time?
 
 
 
 
+
+
+
+  
 
 ###RESOURCES
 #some other plots they could make
-#other things from the other document
+
+##Basic Scatter plot - Shows how hard coral cover changes over time in LTER 1
+#try changing the site by changing "LTER 1" to another LTER or changing the benthic type by changing "HydroCoral" to "HardCoral_StressTol" or some other benthic type after the '$' sign in the response variable (y) 
+plot(x = avgdata$Date[avgdata$Site == "LTER 1"], y = avgdata$HydroCoral[avgdata$Site == "LTER 1"], pch = 20, xlab = "Year", ylab = "Hard Coral Cover (Stress Tol)", main = "LTER 1")
+
+#same plot as above, with a line marking 30% cover
+plot(x = avgdata$Date[avgdata$Site == "LTER 1"], y = avgdata$HydroCoral[avgdata$Site == "LTER 1"], pch = 20, xlab = "Year", ylab = "Hard Coral Cover (Stress Tol)", main = "LTER 1", ylim=c(0,1))
+abline(h=0.3, col = "red") 
+
+#can also plot another benthic variable on the same plot using points()
+plot(x = avgdata$Date[avgdata$Site == "LTER 1"], y = avgdata$HydroCoral[avgdata$Site == "LTER 1"], pch = 20, xlab = "Year", ylab = "Hard Coral Cover (Stress Tol)", main = "LTER 1", ylim=c(0,1))
+points(x = avgdata$Date[avgdata$Site == "LTER 1"], y = avgdata$Macroalgae[avgdata$Site == "LTER 1"], pch = 20, col = "blue")
+abline(h=0.3, col = "red") 
+#NOTE TO ARIEL: ADD LEGEND HERE
+
+##Basic Scatter plot - Shows how hard coral cover varies across space in 2005
+#try changing the year by changing 2005 to another year or changing the benthic type by changing "HardCoral_StressTol" to "Sand" or some other benthic type after the '$' sign in the response variable (y) 
+#as.factor() changes that vector into a factor variable, enabling it to be plotted along the x-axis since factor variables are ordered character variables  
+plot(x = as.factor(avgdata$Site[avgdata$Date == 2005]), y = avgdata$HardCoral_StressTol[avgdata$Date == 2005], xlab = "Site", ylab = "Hard Coral Cover (Stress Tol)", main = "2005")
+
+#GGPLOTS
+
+##Basic Scatter plot - Shows how hard coral cover changes over time in LTER 1
+#try changing the site by changing "LTER 1" to another LTER or changing the benthic type by changing "y = HydroCoral" to "y = HardCoral_StressTol" or some other benthic type 
+ggplot(aes(x = Date, y = HydroCoral), data = avgdata[avgdata$Site == "LTER 1",])+
+  ggtitle("LTER 1")+ #add '+' to indicate that you're adding another element to the plot
+  geom_point()
+
+#same plot as above, with a line marking 30% cover
+#couldn't remember how to do this, so looked up 'add horizontal line to ggplot' and found http://www.sthda.com/english/wiki/ggplot2-add-straight-lines-to-a-plot-horizontal-vertical-and-regression-lines 
+ggplot(aes(x = Date, y = HydroCoral), data = avgdata[avgdata$Site == "LTER 1",])+
+  ggtitle("LTER 1")+ #add '+' to indicate that you're adding another element to the plot
+  geom_point()+
+  geom_hline(yintercept = 0.3, col = "red")
+
+#can also plot another benthic variable on the same plot by adding another geom_point() line
+ggplot(aes(x = Date, y = HydroCoral), data = avgdata[avgdata$Site == "LTER 1",])+
+  ggtitle("LTER 1")+ #add '+' to indicate that you're adding another element to the plot
+  geom_point()+
+  geom_point(aes(x = Date, y = Macroalgae), col = "blue")+
+  geom_hline(yintercept = 0.3, col = "red")
+#NOTE TO ARIEL: ADD LEGEND HERE
+
+##SPATIAL PLOTTING
+library(maps) #CHECK IF THIS IS A DEPENDENCY IN GGPLOT2
+library(ggplot2)
+#this plot is a bit more advanced, but you can still play around with it by changing which benthic type determines the colouration by changing 'colour' of geom_point below
+
+#correct the longitude because the map is from 0 -> 360 and the longitude is currently ~-149
+avgdata$Longitude_corrected <- avgdata$Longitude +360
+
+worldmap <- map_data ("world", wrap = c(0, 360))
+ggplot(aes(x = long, y = lat), data = worldmap) + 
+  geom_polygon(aes(group = group), fill="gainsboro", colour = "gainsboro") +
+  xlab("Longitude") + ylab("Latitude")+ 
+  geom_point(data = avgdata[avgdata$Date == 2005,], aes(x = Longitude_corrected, y = Latitude, colour = HydroCoral))+ #, colour = cl.c
+  coord_cartesian(xlim = c(209,212), ylim = c(-17,-18)) +
+  theme_bw()
+
+#some help guides
+# Base R plotting guide: http://www.sthda.com/english/wiki/r-base-graphs
+# ggplot plotting guide: https://rstudio.github.io/cheatsheets/html/data-visualization.html, https://datacarpentry.org/R-ecology-lesson/04-visualization-ggplot2.html
+
+
