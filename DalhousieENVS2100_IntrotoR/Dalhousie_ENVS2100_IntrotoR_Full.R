@@ -150,4 +150,4 @@ ggplot(aes(x = long, y = lat), data = worldmap) +
 # Base R plotting guide: http://www.sthda.com/english/wiki/r-base-graphs
 # ggplot plotting guide: https://rstudio.github.io/cheatsheets/html/data-visualization.html, https://datacarpentry.org/R-ecology-lesson/04-visualization-ggplot2.html
 
-
+###ADD DATA MANIP CODE ALSO
