@@ -348,6 +348,22 @@ for(i in 1:length(years)){
 avgdata$SoftCoral[which(is.na(avgdata$SoftCoral))] <- 0
 avgdata$Unknown_or_Other[which(is.na(avgdata$Unknown_or_Other))] <- 0
 
+#multiply all of the values by 100 to turn them into percentages, not proportions (more readable)
+avgdata$HardCoral_Other <- avgdata$HardCoral_Other*100
+avgdata$HardCoral_StressTol <- avgdata$HardCoral_StressTol*100
+avgdata$HydroCoral <- avgdata$HydroCoral*100
+avgdata$Macroalgae <- avgdata$Macroalgae*100
+avgdata$SoftCoral <- avgdata$SoftCoral*100
+avgdata$SmallAlgae_orBare <- avgdata$SmallAlgae_orBare*100
+avgdata$Sand <- avgdata$Sand*100
+avgdata$Unknown_or_Other <- avgdata$Unknown_or_Other*100
+
+#restrict to 2 decimal places for it to look cleaner
+for(i in 5:12){
+  avgdata[,i] <- as.numeric(format(round(avgdata[,i], 2), nsmall = 2))
+}
+
+
 #now save this final dataset
 save(avgdata, file = "avgdata_ENVS2100_IntrotoR.RData")
 #https://datatofish.com/export-dataframe-to-csv-in-r/ 
