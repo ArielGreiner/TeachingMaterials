@@ -1,43 +1,43 @@
 ##Introduction to R
 
+#this is a comment
+
 ##Getting started
 #simple math
-
+2+5 #run this line by highlighting it and then typing CTL + ENTER or putting your cursor on the 7 and clicking 'Run'
 
 #saving data to variables
-
-
+a <- 2+5
+b <- 3
 
 #functions act on variables; commas separate variables
+sum(a,b)
 
 #dataframes are unique to R and very useful
 #lets you view the entire dataframe in a separate window, unique to RStudio
-
+View(iris)
 
 #shows you the first 6 lines
-
+head(iris)
 
 #other summarizing functions
+summary(iris)
+str(iris)
 
-
+#learning how to work with dataframes
+iris$Sepal.Length
+iris$Sepal.Length[iris$Species == "setosa"]
+levels(iris$Species)
+iris$Petal.Length[iris$Species == "setosa"]
 
 #simple plotting
+?plot
+plot(x = iris$Sepal.Length, y = iris$Sepal.Width)
 
-
-
-#more complex plotting 
-#ggplot2 is a package for making more advanced plots
-#2 Methods to Install it
-#need to choose a CRAN mirror to download from, I usually choose Ontario (in Canada)
-
-#Method 1: Manual - Tools -> Install Packages... -> type in 'ggplot2', click yes to install dependencies also
-#Method 2:
-install.packages("ggplot2") #make sure to install dependencies also!
-
-library(ggplot2)
-ggplot(aes(x = Sepal.Length, y = Sepal.Width, col = Species), data = iris)+ #add '+' to indicate that you're adding another element to the plot
-  geom_point()
-
+#add a straight line? Search "add a straight line in r base plot" 
+# http://www.sthda.com/english/wiki/abline-r-function-an-easy-way-to-add-straight-lines-to-a-plot-using-r-software#:~:text=The%20R%20function%20abline(),%3DNULL%2C%20...)
+plot(x = iris$Sepal.Length, y = iris$Sepal.Width)
+abline(h = 3, col = "red")
 
 #now let's download some actual coral data!!
 # Download data from here: http://tinyurl.com/ENVS2100RData 
@@ -46,22 +46,22 @@ ggplot(aes(x = Sepal.Length, y = Sepal.Width, col = Species), data = iris)+ #add
 #Manual Method
 #File -> Open File... -> Click on the .RData file and say 'Yes'
 
-#for windows: <NEED TO CHECK THIS, SOME WEIRD // SITUATION>
-#for mac: right click on the file, click on inspect element, copy paste the file path into the code below
-#e.g. on my computer  
-load(file = "~/Dropbox/Github/TeachingMaterials/DalhousieENVS2100_IntrotoR/avgdata_ENVS2100_IntrotoR.RData") #it's called 'avgdata'
+#R Method
+setwd() #set this to your Downloads folder or wherever you downloaded the file to
+#file path to your downlaods folder should look something like "C:/Users/akg6325/Documents"
+getwd() #to check that you're in your downloads folder
+load("avgdata_ENVS2100_IntrotoR.RData")
 
-#Look at the Data
-
-
-
-#simple data manipulation
+#Look at the Data, use the methods we talked about before
 
 
-#show them how to code a simple plot of the data
 
 
-#in ggplot
+#Simple plots of the Data
+plot(x = avgdata$Date[avgdata$Site == ""], y = avgdata$Macroalgae[avgdata$Site == ""])
+
+plot(x = avgdata$Date[avgdata$Site == ""], y = avgdata$Macroalgae[avgdata$Site == ""], xlab = "", ylab = "", main = "", pch = 20, col = "")
+abline(h = 30, col = "red")
 
 
 

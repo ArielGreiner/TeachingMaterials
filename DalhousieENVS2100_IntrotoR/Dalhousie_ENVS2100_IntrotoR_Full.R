@@ -57,16 +57,14 @@ head(avgdata)
 summary(avgdata) 
 str(avgdata)
 
-#simple data manipulation
-avgdata$HardCoral <- avgdata$HardCoral_Other + avgdata$HardCoral_StressTol
+#Data Description
+#ADD DESCRIPTION OF THE DATA HERE
+
 
 #show them how to code a simple plot of the data
 plot(x = avgdata$Date[avgdata$Site == "LTER 1"], y = avgdata$HydroCoral[avgdata$Site == "LTER 1"], pch = 20, xlab = "Year", ylab = "Hard Coral Cover (Stress Tol)", main = "LTER 1")
 
-#in ggplot
-ggplot(aes(x = Date, y = HydroCoral), data = avgdata[avgdata$Site == "LTER 1",])+
-  ggtitle("LTER 1")+ #add '+' to indicate that you're adding another element to the plot
-  geom_point()
+#ADD MORE PLOTS HERE
 
 #now make some plots of your own to determine if the reefs in Moorea are healthy 
 #Is hard coral cover increasing or decreasing over time?
