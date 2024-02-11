@@ -58,9 +58,9 @@ load("avgdata_ENVS2100_IntrotoR.RData")
 
 
 #Simple plots of the Data
-plot(x = avgdata$Date[avgdata$Site == ""], y = avgdata$Macroalgae[avgdata$Site == ""])
+plot(x = Data$Date[Data$Site == ""], y = Data$Macroalgae[Data$Site == ""])
 
-plot(x = avgdata$Date[avgdata$Site == ""], y = avgdata$Macroalgae[avgdata$Site == ""], xlab = "", ylab = "", main = "", pch = 20, col = "")
+plot(x = Data$Date[Data$Site == ""], y = Data$Macroalgae[Data$Site == ""], xlab = "", ylab = "", main = "", pch = 20, col = "")
 abline(h = 30, col = "red")
 
 
