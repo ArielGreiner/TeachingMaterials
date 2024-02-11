@@ -359,15 +359,22 @@ avgdata$Sand <- avgdata$Sand*100
 avgdata$Unknown_or_Other <- avgdata$Unknown_or_Other*100
 
 #restrict to 2 decimal places for it to look cleaner
+#used https://stackoverflow.com/questions/3443687/formatting-decimal-places-in-r 
 for(i in 5:12){
   avgdata[,i] <- as.numeric(format(round(avgdata[,i], 2), nsmall = 2))
 }
 
+#2.11.2024 - making the dataset much simpler
+avgdata$HardCoral <- avgdata$HardCoral_Other + avgdata$HardCoral_StressTol
+avgdata$Other <- avgdata$Unknown_or_Other + avgdata$HydroCoral + avgdata$SoftCoral
+
+Data <- data.frame(Date = avgdata$Date, Site = avgdata$Site, Latitude = avgdata$Latitude, Longitude = avgdata$Longitude, HardCoral = avgdata$HardCoral, Macroalgae = avgdata$Macroalgae, SmallAlgae = avgdata$SmallAlgae_orBare, Other = avgdata$Other, Sand = avgdata$Sand)
 
 #now save this final dataset
-save(avgdata, file = "avgdata_ENVS2100_IntrotoR.RData")
+save(Data, file = "avgdata_ENVS2100_IntrotoR.RData")
+saveRDS(Data, file = "avgdata_ENVS2100_IntrotoR.rds")
 #https://datatofish.com/export-dataframe-to-csv-in-r/ 
-write.csv(avgdata, file = "avgdata_ENVS2100_IntrotoR.csv")
+write.csv(Data, file = "avgdata_ENVS2100_IntrotoR.csv")
 
 ```
 
