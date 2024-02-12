@@ -53,14 +53,14 @@ getwd() #to check that you're in your downloads folder
 load("avgdata_ENVS2100_IntrotoR.RData")
 
 #Look at the Data, use the methods we talked about before
-
+head(Data)
 
 
 
 #Simple plots of the Data
 plot(x = Data$Date[Data$Site == ""], y = Data$Macroalgae[Data$Site == ""])
 
-plot(x = Data$Date[Data$Site == ""], y = Data$Macroalgae[Data$Site == ""], xlab = "", ylab = "", main = "", pch = 20, col = "")
+plot(x = Data$Date[Data$Site == ""], y = Data$HardCoral[Data$Site == ""], xlab = "", ylab = "", main = "", pch = 20, col = "")
 abline(h = 30, col = "red")
 
 
@@ -68,14 +68,14 @@ abline(h = 30, col = "red")
 #now make some plots of your own to determine if the reefs in Moorea are healthy 
 #Is hard coral cover increasing or decreasing over time?
 ##Does location matter?
-##What about stress tolerant hard coral, specifically?
 
 #Recall: Healthy coral reef = 30% hard coral cover
 ##How many reefs are above this threshold?
 ##Is this changing over time?
 
-
+#ADD DESCRIPTION OF THE DATA HERE
 
 
 ##FULL CODE: https://github.com/ArielGreiner/TeachingMaterials/blob/main/DalhousieENVS2100_IntrotoR/Dalhousie_ENVS2100_IntrotoR_Full.R 
+##DATA SOURCE: The initial data 'knb-lter-mcr.4_2_20240105.csv' was downloaded from https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-mcr.4.40, by clicking on the "2. Percent Cover - Wide Table" download.
 
