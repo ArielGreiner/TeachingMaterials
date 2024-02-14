@@ -43,7 +43,10 @@ abline(h = 3, col = "red")
 # Download data from here: http://tinyurl.com/ENVS2100RData 
 
 ##Load in the data!
+load(url("https://github.com/ArielGreiner/TeachingMaterials/raw/main/DalhousieENVS2100_IntrotoR/avgdata_ENVS2100_IntrotoR.RData"))
+
 #Manual Method
+#Download from https://github.com/ArielGreiner/TeachingMaterials/raw/main/DalhousieENVS2100_IntrotoR/avgdata_ENVS2100_IntrotoR.RData and then...
 #File -> Open File... -> Click on the .RData file and say 'Yes'
 
 #R Method
@@ -53,7 +56,7 @@ getwd() #to check that you're in your downloads folder
 load("avgdata_ENVS2100_IntrotoR.RData")
 
 #Look at the Data, use the methods we talked about before
-head(Data)
+
 
 
 
@@ -73,7 +76,11 @@ abline(h = 30, col = "red")
 ##How many reefs are above this threshold?
 ##Is this changing over time?
 
-#ADD DESCRIPTION OF THE DATA HERE
+#NOTES ON DATA
+#Date: Year Data was collected
+#Site: The Moorea LTER that Data was collected from
+#Latitude, Longitude: Coordinates of the LTER in question
+#Benthic Organism Columns (5-9): Percent of LTER covered by that organism (or sand)
 
 
 ##FULL CODE: https://github.com/ArielGreiner/TeachingMaterials/blob/main/DalhousieENVS2100_IntrotoR/Dalhousie_ENVS2100_IntrotoR_Full.R 
