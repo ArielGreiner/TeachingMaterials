@@ -10,7 +10,7 @@
 a <- 2+5
 b <- 3
 
-#functions act on variables; commas separate variables
+#functions act on variables; commas separate variables within round brackets
 sum(a,b)
 
 #dataframes are unique to R and very useful
@@ -24,9 +24,10 @@ head(iris)
 summary(iris)
 str(iris)
 
-#learning how to work with dataframes
+#learning how to work with dataframes, square brackets
 iris$Sepal.Length
-iris$Sepal.Length[iris$Species == "setosa"]
+#need to put 'setosa' in quotes so that it doesn't think that it's an object
+iris$Sepal.Length[iris$Species == "setosa"] #sepal lengths of the setosa species
 levels(iris$Species)
 iris$Petal.Length[iris$Species == "setosa"]
 
@@ -40,7 +41,6 @@ plot(x = iris$Sepal.Length, y = iris$Sepal.Width)
 abline(h = 3, col = "red")
 
 #now let's download some actual coral data!!
-# Download data from here: http://tinyurl.com/ENVS2100RData 
 
 ##Load in the data!
 load(url("https://github.com/ArielGreiner/TeachingMaterials/raw/main/DalhousieENVS2100_IntrotoR/avgdata_ENVS2100_IntrotoR.RData"))

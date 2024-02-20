@@ -11,7 +11,7 @@ a <- 2+5
 b <- 3
 
 #functions act on variables
-sum(a,b) #commas separate variables
+sum(a,b) #commas separate variables within round brackets
 
 #dataframes are unique to R and very useful
 #lets you view the entire dataframe in a separate window, unique to RStudio
@@ -22,9 +22,9 @@ head(iris)
 summary(iris) #big overview of the data
 str(iris) #a bit more technical
 
-#learning how to work with dataframes
+#learning how to work with dataframes, square brackets
 iris$Sepal.Length
-iris$Sepal.Length[iris$Species == "setosa"]
+iris$Sepal.Length[iris$Species == "setosa"] #need to put 'setosa' in quotes so that it doesn't think that it's an object
 levels(iris$Species)
 iris$Petal.Length[iris$Species == "setosa"]
 
